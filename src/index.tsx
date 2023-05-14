@@ -7,15 +7,16 @@ import { Provider } from "react-redux"
 import { persistor, store } from "./app/store"
 import { BrowserRouter, HashRouter } from "react-router-dom"
 import { PersistGate } from "redux-persist/integration/react"
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
-    <Provider store={store}>
-        <HashRouter>
+    <HashRouter>
+        <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <App />
             </PersistGate>
-        </HashRouter>
-    </Provider>
+        </Provider>
+    </HashRouter>
 )
 
 reportWebVitals()
