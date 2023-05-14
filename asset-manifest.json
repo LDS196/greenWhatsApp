@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/greenWhatsapp/static/css/main.71e2aba7.css",
+    "main.js": "/greenWhatsapp/static/js/main.baee826c.js",
+    "static/js/787.b70061a7.chunk.js": "/greenWhatsapp/static/js/787.b70061a7.chunk.js",
+    "index.html": "/greenWhatsapp/index.html",
+    "main.71e2aba7.css.map": "/greenWhatsapp/static/css/main.71e2aba7.css.map",
+    "main.baee826c.js.map": "/greenWhatsapp/static/js/main.baee826c.js.map",
+    "787.b70061a7.chunk.js.map": "/greenWhatsapp/static/js/787.b70061a7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.71e2aba7.css",
+    "static/js/main.baee826c.js"
+  ]
+}
