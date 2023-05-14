@@ -1,32 +1,31 @@
 import {instance} from "./common.api";
 
-
-const idInstance = 1101819970
-const apiTokenInstance = 'ce772188c5c44f569958249eb4d01381845d95252e91405b9e'
-
 export const appApi = {
     sendMessage(data: MessageType) {
-        return instance.post<{ idMessage: string }>(`waInstance${idInstance}/sendMessage/${apiTokenInstance}`, data)
+        return instance.post<{ idMessage: string }>(`waInstance${+data.idInstance}/sendMessage/${data.apiTokenInstance}`,
+            {chatId:data.chatId, message: data.message})
     },
-    receiveNotification() {
-        return instance.get<ReceiveMessageResponseType>(`waInstance${idInstance}/ReceiveNotification/${apiTokenInstance}`)
+    receiveNotification(data:{ apiTokenInstance:string, idInstance:string}) {
+        return instance.get<ReceiveMessageResponseType>(`waInstance${+data.idInstance}/ReceiveNotification/${data.apiTokenInstance}`)
     },
     deleteNotification(data: DeleteNotificationDataType) {
-        return instance.delete<{ result: boolean }>(`waInstance${idInstance}/DeleteNotification/${apiTokenInstance}/${data.receiptId}`)
+        return instance.delete<{ result: boolean }>(`waInstance${+data.idInstance}/DeleteNotification/${data.apiTokenInstance}/${data.receiptId}`)
     },
-    getSettings() {
-        return instance.get<{ wid: ''}>(`waInstance${idInstance}/getSettings/${apiTokenInstance}`)
+    getSettings(data:{ apiTokenInstance:string, idInstance:string}) {
+        return instance.get<{ wid: string}>(`waInstance${data.idInstance}/getSettings/${data.apiTokenInstance}`)
     },
-
-
 }
 
 export type DeleteNotificationDataType = {
     receiptId: number
+    apiTokenInstance:string
+    idInstance:string
 }
 export type MessageType = {
     chatId: string,
     message: string
+    apiTokenInstance:string
+    idInstance:string
 }
 
 export type ReceiveMessageResponseType = {

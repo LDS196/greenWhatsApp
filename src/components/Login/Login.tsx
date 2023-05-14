@@ -12,22 +12,21 @@ import {useForm} from "react-hook-form"
 import {useSelector} from "react-redux"
 import {selectApp} from "../../app/app.select";
 import {useActions} from "../../hooks/useActions";
-import {appActions, appThunks} from "../../app/app.slice";
+import {appActions, } from "../../app/app.slice";
 import {Navigate} from "react-router-dom";
 
 
 type LoginParamsType = {
-    idInstance: number | null,
+    idInstance: string,
     apiTokenInstance: string
 }
 export const Login = () => {
     const {login, setIsLoggedIn} = useActions(appActions)
-    const {getSettings} = useActions(appThunks)
     const {isLoggedIn} = useSelector(selectApp)
 
     const {register, formState: {errors, isDirty, isValid}, handleSubmit,} = useForm<LoginParamsType>({
         defaultValues: {
-            idInstance: null,
+            idInstance: '',
             apiTokenInstance: "",
         },
         mode: "onChange",
@@ -36,7 +35,6 @@ export const Login = () => {
     const onSubmit = (data: LoginParamsType) => {
         login(data)
         setIsLoggedIn({isLoggedIn: true})
-        getSettings({})
     }
 
     if (isLoggedIn) {

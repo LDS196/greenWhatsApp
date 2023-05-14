@@ -1,45 +1,46 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {createAppAsyncThunk} from "../components/utils/create-app-async-thunk";
+import {createAppAsyncThunk} from "../utils/create-app-async-thunk";
 import {appApi, DeleteNotificationDataType,} from "./appApi";
+import {handleServerNetworkError} from "../utils/handle-server-network-error";
 
 
 const sendMessage = createAppAsyncThunk<{ idMessage: string }, { message: string }>(
     "app/sendMessage",
     async (arg, ThunkApi) => {
         const {rejectWithValue, getState, dispatch} = ThunkApi
-        const {chatId, wid} = getState().app
+        const {chatId, wid,apiTokenInstance,idInstance} = getState().app
 
         try {
-            const data = {chatId: chatId, message: arg.message}
+            const data = {chatId, message: arg.message,apiTokenInstance,idInstance}
             const res = await appApi.sendMessage(data)
-            dispatch(appActions.addMessage({id: wid, message: arg.message}))
-            console.log(res.data)
+            dispatch(appActions.addMessage({id: wid, message: arg.message, idMessage: res.data.idMessage}))
             return res.data
         } catch (error) {
-            return rejectWithValue(null)
+            return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
 const getSettings = createAppAsyncThunk<{ wid: string }, void>(
     "app/getSettings",
     async (arg, ThunkApi) => {
-        const {rejectWithValue} = ThunkApi
+        const {rejectWithValue,getState} = ThunkApi
+        const {apiTokenInstance,idInstance} = getState().app
         try {
-            const res = await appApi.getSettings()
+            const res = await appApi.getSettings({apiTokenInstance,idInstance})
             return res.data
         } catch (error) {
-            return rejectWithValue(null)
+            return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
 const deleteNotification = createAppAsyncThunk<void, DeleteNotificationDataType>(
     "app/deleteNotification",
     async (arg, ThunkApi) => {
-        const {rejectWithValue} = ThunkApi
+        const {rejectWithValue,} = ThunkApi
         try {
             await appApi.deleteNotification(arg)
         } catch (error) {
-            return rejectWithValue(null)
+            return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
@@ -48,32 +49,32 @@ const receiveNotification = createAppAsyncThunk<void, void>(
     "app/receiveNotification",
     async (arg, ThunkApi) => {
         const {rejectWithValue, getState, dispatch} = ThunkApi
-        const {chatId} = getState().app
+        const {apiTokenInstance,idInstance,chatId} = getState().app
 
         try {
-            const res = await appApi.receiveNotification()
+            const res = await appApi.receiveNotification({apiTokenInstance,idInstance})
             if (res.data !== null) {
-                dispatch(appThunks.deleteNotification({receiptId: res.data.receiptId}))
+                dispatch(appThunks.deleteNotification({receiptId: res.data.receiptId,apiTokenInstance,idInstance}))
             }
-            if (res.data?.body.senderData.chatId === chatId) {
+            if (res.data?.body?.senderData?.sender === chatId) {
                 if (res.data?.body.messageData.textMessageData) {
                     dispatch(appActions.addMessage({
                         message: res.data?.body.messageData.textMessageData.textMessage,
-                        id: res.data?.body.senderData.chatId
-
+                        id: res.data?.body.senderData.chatId,
+                        idMessage: res.data?.body.idMessage
                     }))
                 }
             }
             return
-        } catch
-            (error) {
-            return rejectWithValue(null)
+        } catch (error) {
+            return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
 type MessageType = {
     id: string
     message: string
+    idMessage: string
 }
 const slice = createSlice({
     name: "app",
@@ -81,7 +82,7 @@ const slice = createSlice({
         wid: '',
         messages: [] as Array<MessageType>,
         error: null as null | string,
-        idInstance: null as null | number,
+        idInstance: '' ,
         apiTokenInstance: '',
         isLoading: false,
         isLoggedIn: false,
@@ -91,11 +92,14 @@ const slice = createSlice({
         addMessage: (state, action: PayloadAction<MessageType>) => {
             state.messages.push(action.payload)
         },
+        clearMessages: (state) => {
+            state.messages = []
+        },
         setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
             state.error = action.payload.error
         },
-        login: (state, action: PayloadAction<{ idInstance: number | null, apiTokenInstance: string }>) => {
-            console.log(action.payload)
+        login: (state, action: PayloadAction<{ idInstance: string, apiTokenInstance: string }>) => {
+
             state.idInstance = action.payload.idInstance
             state.apiTokenInstance = action.payload.apiTokenInstance
         },
@@ -117,7 +121,7 @@ const slice = createSlice({
                 (action) => {
                     return action.type.endsWith("/pending")
                 },
-                (state, action) => {
+                (state) => {
                     state.isLoading = true
                 }
             )
@@ -126,7 +130,10 @@ const slice = createSlice({
                     return action.type.endsWith("/rejected")
                 },
                 (state, action) => {
-
+                    const { payload } = action
+                    if (payload?.showGlobalError) {
+                        state.error = payload.data
+                    }
                     state.isLoading = false
                 }
             )
@@ -134,8 +141,7 @@ const slice = createSlice({
                 (action) => {
                     return action.type.endsWith("/fulfilled")
                 },
-                (state, action) => {
-
+                (state) => {
                     state.isLoading = false
                 }
             )
