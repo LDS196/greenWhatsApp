@@ -133,9 +133,6 @@ export const MessageLeft: FC<PropsType> = (props) => {
                     <div className={classes.displayName}>{displayName}</div>
                     <div className={classes.messageBlue}>
                         <div>
-                            <p>
-                                ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-                            </p>
                             <p className={classes.messageContent}>{message}</p>
                         </div>
                         <div className={classes.messageTimeStampRight}>{timestamp}</div>
