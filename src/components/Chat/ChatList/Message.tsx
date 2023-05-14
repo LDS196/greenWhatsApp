@@ -1,24 +1,24 @@
-import React, {FC} from "react";
-import {Avatar, Theme,} from "@mui/material";
-import {deepOrange} from "@mui/material/colors";
-import {createStyles, makeStyles} from "@mui/styles";
+import React, { FC } from "react"
+import { Avatar, Theme } from "@mui/material"
+import { deepOrange } from "@mui/material/colors"
+import { createStyles, makeStyles } from "@mui/styles"
 
-type PropsType={
-    message:string
-    timestamp:string
-    photoURL:string
-    displayName:string
-    avatarDisp:boolean
+type PropsType = {
+    message: string
+    timestamp: string
+    photoURL: string
+    displayName: string
+    avatarDisp: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         messageRow: {
-            display: "flex"
+            display: "flex",
         },
         messageRowRight: {
             display: "flex",
-            justifyContent: "flex-end"
+            justifyContent: "flex-end",
         },
         messageBlue: {
             position: "relative",
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 borderLeft: "15px solid transparent",
                 borderRight: "15px solid transparent",
                 top: "0",
-                left: "-15px"
+                left: "-15px",
             },
             "&:before": {
                 content: "''",
@@ -52,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
                 borderLeft: "16px solid transparent",
                 borderRight: "16px solid transparent",
                 top: "-1px",
-                left: "-17px"
-            }
+                left: "-17px",
+            },
         },
         messageOrange: {
             position: "relative",
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 borderLeft: "15px solid transparent",
                 borderRight: "15px solid transparent",
                 top: "0",
-                right: "-15px"
+                right: "-15px",
             },
             "&:before": {
                 content: "''",
@@ -87,14 +87,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 borderLeft: "16px solid transparent",
                 borderRight: "16px solid transparent",
                 top: "-1px",
-                right: "-17px"
-            }
+                right: "-17px",
+            },
         },
 
         messageContent: {
             padding: 0,
             margin: 0,
-            wordWrap: 'break-word'
+            wordWrap: "break-word",
         },
         messageTimeStampRight: {
             position: "absolute",
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
             fontWeight: "300",
             marginTop: "10px",
             bottom: "-3px",
-            right: "5px"
+            right: "5px",
         },
 
         orange: {
@@ -114,30 +114,28 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: "transparent",
         },
         displayName: {
-            marginLeft: "20px"
-        }
+            marginLeft: "20px",
+        },
     })
-);
+)
 
-
-export const MessageLeft:FC<PropsType> = (props) => {
-    const message = props.message ? props.message : "no message";
-    const timestamp = props.timestamp ? props.timestamp : "";
-    const photoURL = props.photoURL ? props.photoURL : "";
-    const displayName = props.displayName ? props.displayName : "No name";
-    const classes = useStyles();
+export const MessageLeft: FC<PropsType> = (props) => {
+    const message = props.message ? props.message : "no message"
+    const timestamp = props.timestamp ? props.timestamp : ""
+    const photoURL = props.photoURL ? props.photoURL : ""
+    const displayName = props.displayName ? props.displayName : "No name"
+    const classes = useStyles()
     return (
         <>
             <div className={classes.messageRow}>
-                <Avatar
-                    alt={displayName}
-                    className={classes.orange}
-                    src={photoURL}
-                ></Avatar>
+                <Avatar alt={displayName} className={classes.orange} src={photoURL}></Avatar>
                 <div>
                     <div className={classes.displayName}>{displayName}</div>
                     <div className={classes.messageBlue}>
                         <div>
+                            <p>
+                                ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+                            </p>
                             <p className={classes.messageContent}>{message}</p>
                         </div>
                         <div className={classes.messageTimeStampRight}>{timestamp}</div>
@@ -145,15 +143,15 @@ export const MessageLeft:FC<PropsType> = (props) => {
                 </div>
             </div>
         </>
-    );
-};
+    )
+}
 
-export const MessageRight:FC<PropsType> = (props) => {
-    const classes = useStyles();
-    const message = props.message ? props.message : "no message";
-    const timestamp = props.timestamp ? props.timestamp : "";
-    const photoURL = props.photoURL ? props.photoURL : "";
-    const displayName = props.displayName ? props.displayName : "No name";
+export const MessageRight: FC<PropsType> = (props) => {
+    const classes = useStyles()
+    const message = props.message ? props.message : "no message"
+    const timestamp = props.timestamp ? props.timestamp : ""
+    const photoURL = props.photoURL ? props.photoURL : ""
+    const displayName = props.displayName ? props.displayName : "No name"
     return (
         <div className={classes.messageRowRight}>
             <div className={classes.messageOrange}>
@@ -161,5 +159,5 @@ export const MessageRight:FC<PropsType> = (props) => {
                 <div className={classes.messageTimeStampRight}>{timestamp}</div>
             </div>
         </div>
-    );
-};
+    )
+}

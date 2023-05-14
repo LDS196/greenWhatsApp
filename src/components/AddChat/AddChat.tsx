@@ -1,27 +1,22 @@
 import React from "react"
 import s from "../Login/Login.module.scss"
-import {
-    Box,
-    Button,
-    Paper,
-    TextField,
-    Typography,
-} from "@mui/material"
-import {useForm} from "react-hook-form"
-import {useActions} from "../../hooks/useActions";
-import {appActions, appThunks} from "../../app/app.slice";
-
-
+import { Box, Button, Paper, TextField, Typography } from "@mui/material"
+import { useForm } from "react-hook-form"
+import { useActions } from "../../hooks/useActions"
+import { appActions, appThunks } from "../../app/app.slice"
 
 type ChatIdType = {
-    chatId: string,
+    chatId: string
 }
 export const AddChat = () => {
+    const { setChatId, clearMessages } = useActions(appActions)
+    const { getSettings } = useActions(appThunks)
 
-    const {setChatId,clearMessages} = useActions(appActions)
-    const {getSettings} = useActions(appThunks)
-
-    const {register, formState: {errors, isDirty, isValid}, handleSubmit,} = useForm<ChatIdType>({
+    const {
+        register,
+        formState: { errors, isDirty, isValid },
+        handleSubmit,
+    } = useForm<ChatIdType>({
         defaultValues: {
             chatId: "",
         },
@@ -29,17 +24,15 @@ export const AddChat = () => {
     })
 
     const onSubmit = (data: ChatIdType) => {
-        const value = {chatId: data.chatId + '@c.us'}
+        const value = { chatId: data.chatId + "@c.us" }
         setChatId(value)
         getSettings({})
-        clearMessages({})
-
+        clearMessages()
     }
 
     return (
-
-        <Paper elevation={3} style={{padding: "10px",minWidth:'350px'}}>
-            <Box sx={{marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center",}}>
+        <Paper elevation={3} style={{ padding: "10px", minWidth: "350px" }}>
+            <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Typography component="h1" variant="h5">
                     Add new chat
                 </Typography>
@@ -47,7 +40,7 @@ export const AddChat = () => {
                     component="form"
                     onSubmit={handleSubmit(onSubmit)}
                     noValidate
-                    sx={{mt: 1, maxWidth: "350px", width: "100%"}}
+                    sx={{ mt: 1, maxWidth: "350px", width: "100%" }}
                 >
                     <TextField
                         {...register("chatId", {
@@ -68,20 +61,18 @@ export const AddChat = () => {
                         name="chatId"
                         type={"number"}
                     />
-                    <div className={s.error}>{errors?.chatId &&
-                        <p>{errors?.chatId?.message || "Error"}</p>}</div>
+                    <div className={s.error}>{errors?.chatId && <p>{errors?.chatId?.message || "Error"}</p>}</div>
                     <Button
                         disabled={!isDirty || !isValid}
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{mt: 3, mb: 2}}
+                        sx={{ mt: 3, mb: 2 }}
                     >
                         Add
                     </Button>
                 </Box>
             </Box>
         </Paper>
-
     )
 }

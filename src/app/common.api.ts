@@ -1,5 +1,5 @@
 import axios from "axios"
 
 export const instance = axios.create({
-    baseURL: "https://api.green-api.com/"
+    baseURL: "https://api.green-api.com/",
 })

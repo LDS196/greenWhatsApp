@@ -1,42 +1,38 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {createAppAsyncThunk} from "../utils/create-app-async-thunk";
-import {appApi, DeleteNotificationDataType,} from "./appApi";
-import {handleServerNetworkError} from "../utils/handle-server-network-error";
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createAppAsyncThunk } from "../utils/create-app-async-thunk"
+import { appApi, DeleteNotificationDataType } from "./appApi"
+import { handleServerNetworkError } from "../utils/handle-server-network-error"
 
 const sendMessage = createAppAsyncThunk<{ idMessage: string }, { message: string }>(
     "app/sendMessage",
     async (arg, ThunkApi) => {
-        const {rejectWithValue, getState, dispatch} = ThunkApi
-        const {chatId, wid,apiTokenInstance,idInstance} = getState().app
+        const { rejectWithValue, getState, dispatch } = ThunkApi
+        const { chatId, wid, apiTokenInstance, idInstance } = getState().app
 
         try {
-            const data = {chatId, message: arg.message,apiTokenInstance,idInstance}
+            const data = { chatId, message: arg.message, apiTokenInstance, idInstance }
             const res = await appApi.sendMessage(data)
-            dispatch(appActions.addMessage({id: wid, message: arg.message, idMessage: res.data.idMessage}))
+            dispatch(appActions.addMessage({ id: wid, message: arg.message, idMessage: res.data.idMessage }))
             return res.data
         } catch (error) {
             return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
-const getSettings = createAppAsyncThunk<{ wid: string }, void>(
-    "app/getSettings",
-    async (arg, ThunkApi) => {
-        const {rejectWithValue,getState} = ThunkApi
-        const {apiTokenInstance,idInstance} = getState().app
-        try {
-            const res = await appApi.getSettings({apiTokenInstance,idInstance})
-            return res.data
-        } catch (error) {
-            return rejectWithValue(handleServerNetworkError(error))
-        }
+const getSettings = createAppAsyncThunk<{ wid: string }, void>("app/getSettings", async (arg, ThunkApi) => {
+    const { rejectWithValue, getState } = ThunkApi
+    const { apiTokenInstance, idInstance } = getState().app
+    try {
+        const res = await appApi.getSettings({ apiTokenInstance, idInstance })
+        return res.data
+    } catch (error) {
+        return rejectWithValue(handleServerNetworkError(error))
     }
-)
+})
 const deleteNotification = createAppAsyncThunk<void, DeleteNotificationDataType>(
     "app/deleteNotification",
     async (arg, ThunkApi) => {
-        const {rejectWithValue,} = ThunkApi
+        const { rejectWithValue } = ThunkApi
         try {
             await appApi.deleteNotification(arg)
         } catch (error) {
@@ -45,32 +41,31 @@ const deleteNotification = createAppAsyncThunk<void, DeleteNotificationDataType>
     }
 )
 
-const receiveNotification = createAppAsyncThunk<void, void>(
-    "app/receiveNotification",
-    async (arg, ThunkApi) => {
-        const {rejectWithValue, getState, dispatch} = ThunkApi
-        const {apiTokenInstance,idInstance,chatId} = getState().app
+const receiveNotification = createAppAsyncThunk<void, void>("app/receiveNotification", async (arg, ThunkApi) => {
+    const { rejectWithValue, getState, dispatch } = ThunkApi
+    const { apiTokenInstance, idInstance, chatId } = getState().app
 
-        try {
-            const res = await appApi.receiveNotification({apiTokenInstance,idInstance})
-            if (res.data !== null) {
-                dispatch(appThunks.deleteNotification({receiptId: res.data.receiptId,apiTokenInstance,idInstance}))
-            }
-            if (res.data?.body?.senderData?.sender === chatId) {
-                if (res.data?.body.messageData.textMessageData) {
-                    dispatch(appActions.addMessage({
+    try {
+        const res = await appApi.receiveNotification({ apiTokenInstance, idInstance })
+        if (res.data !== null) {
+            dispatch(appThunks.deleteNotification({ receiptId: res.data.receiptId, apiTokenInstance, idInstance }))
+        }
+        if (res.data?.body?.senderData?.sender === chatId) {
+            if (res.data?.body.messageData.textMessageData) {
+                dispatch(
+                    appActions.addMessage({
                         message: res.data?.body.messageData.textMessageData.textMessage,
                         id: res.data?.body.senderData.chatId,
-                        idMessage: res.data?.body.idMessage
-                    }))
-                }
+                        idMessage: res.data?.body.idMessage,
+                    })
+                )
             }
-            return
-        } catch (error) {
-            return rejectWithValue(handleServerNetworkError(error))
         }
+        return
+    } catch (error) {
+        return rejectWithValue(handleServerNetworkError(error))
     }
-)
+})
 type MessageType = {
     id: string
     message: string
@@ -79,14 +74,14 @@ type MessageType = {
 const slice = createSlice({
     name: "app",
     initialState: {
-        wid: '',
+        wid: "",
         messages: [] as Array<MessageType>,
         error: null as null | string,
-        idInstance: '' ,
-        apiTokenInstance: '',
+        idInstance: "",
+        apiTokenInstance: "",
         isLoading: false,
         isLoggedIn: false,
-        chatId: ''
+        chatId: "",
     },
     reducers: {
         addMessage: (state, action: PayloadAction<MessageType>) => {
@@ -98,8 +93,7 @@ const slice = createSlice({
         setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
             state.error = action.payload.error
         },
-        login: (state, action: PayloadAction<{ idInstance: string, apiTokenInstance: string }>) => {
-
+        login: (state, action: PayloadAction<{ idInstance: string; apiTokenInstance: string }>) => {
             state.idInstance = action.payload.idInstance
             state.apiTokenInstance = action.payload.apiTokenInstance
         },
@@ -112,8 +106,7 @@ const slice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(sendMessage.fulfilled, () => {
-            })
+            .addCase(sendMessage.fulfilled, () => {})
             .addCase(getSettings.fulfilled, (state, action) => {
                 state.wid = action.payload.wid
             })
@@ -149,4 +142,4 @@ const slice = createSlice({
 })
 export const appActions = slice.actions
 export const appReducer = slice.reducer
-export const appThunks = {getSettings, sendMessage, deleteNotification, receiveNotification}
+export const appThunks = { getSettings, sendMessage, deleteNotification, receiveNotification }
