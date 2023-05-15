@@ -51,8 +51,11 @@ export type ReceiveMessageResponseType = {
             senderName: string
         }
         messageData: {
-            typeMessage: string
-            textMessageData: {
+            extendedTextMessageData?: {
+                text: string
+            }
+            typeMessage?: string
+            textMessageData?: {
                 textMessage: string
             }
         }

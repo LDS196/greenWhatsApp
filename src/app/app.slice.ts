@@ -50,8 +50,9 @@ const receiveNotification = createAppAsyncThunk<any,void>("app/receiveNotificati
 
     try {
         const res = await appApi.receiveNotification({ apiTokenInstance, idInstance })
+        console.log(res.data)
         if (res.data?.body?.senderData?.sender === chatId) {
-            if (res.data.body.messageData.textMessageData) {
+            if (res.data.body.messageData?.textMessageData) {
                 dispatch(appActions.addMessage({
                         message: res.data?.body.messageData.textMessageData.textMessage,
                         id: res.data?.body.senderData.chatId,
@@ -59,7 +60,17 @@ const receiveNotification = createAppAsyncThunk<any,void>("app/receiveNotificati
                     })
                 )
             }
+            if (res.data.body.messageData?.extendedTextMessageData) {
+                dispatch(appActions.addMessage({
+                        message: res.data?.body.messageData.extendedTextMessageData.text,
+                        id: res.data?.body.senderData.chatId,
+                        idMessage: res.data?.body.idMessage,
+                    })
+                )
+            }
         }
+
+
         return res.data
     } catch (error) {
         return rejectWithValue(handleServerNetworkError(error))
