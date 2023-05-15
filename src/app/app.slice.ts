@@ -50,7 +50,7 @@ const receiveNotification = createAppAsyncThunk<any,void>("app/receiveNotificati
 
     try {
         const res = await appApi.receiveNotification({ apiTokenInstance, idInstance })
-        console.log(res.data)
+
         if (res.data?.body?.senderData?.sender === chatId) {
             if (res.data.body.messageData?.textMessageData) {
                 dispatch(appActions.addMessage({

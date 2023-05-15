@@ -54,6 +54,7 @@ export const ChatList = () => {
 
 
     useEffect(() => {
+
         receiveNotification({})
             .unwrap()
             .then(res => {
@@ -63,9 +64,9 @@ export const ChatList = () => {
                 deleteNotification({ receiptId: res.receiptId, apiTokenInstance, idInstance })
                     .unwrap()
                     .then(res=> {
-                    if (res.result) {
-                        setStatus(prevState => !prevState)
-                    }
+                        if(res.result) {
+                            setStatus(prevState => !prevState)
+                        }
                 })
             }
 

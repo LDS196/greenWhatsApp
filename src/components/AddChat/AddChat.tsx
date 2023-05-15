@@ -31,7 +31,7 @@ export const AddChat = () => {
     }
 
     return (
-        <Paper elevation={3} style={{ padding: "10px", minWidth: "350px" }}>
+        <Paper elevation={3} style={{ padding: "10px", minWidth: "200px" }}>
             <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Typography component="h1" variant="h5">
                     Add new chat
