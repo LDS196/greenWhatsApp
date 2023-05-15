@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/greenWhatsApp/static/css/main.71e2aba7.css",
-    "main.js": "/greenWhatsApp/static/js/main.60fef65a.js",
+    "main.js": "/greenWhatsApp/static/js/main.bcc1ddbb.js",
     "static/js/787.b70061a7.chunk.js": "/greenWhatsApp/static/js/787.b70061a7.chunk.js",
     "index.html": "/greenWhatsApp/index.html",
     "main.71e2aba7.css.map": "/greenWhatsApp/static/css/main.71e2aba7.css.map",
-    "main.60fef65a.js.map": "/greenWhatsApp/static/js/main.60fef65a.js.map",
+    "main.bcc1ddbb.js.map": "/greenWhatsApp/static/js/main.bcc1ddbb.js.map",
     "787.b70061a7.chunk.js.map": "/greenWhatsApp/static/js/787.b70061a7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.71e2aba7.css",
-    "static/js/main.60fef65a.js"
+    "static/js/main.bcc1ddbb.js"
   ]
 }
