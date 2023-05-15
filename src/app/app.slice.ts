@@ -19,7 +19,8 @@ const sendMessage = createAppAsyncThunk<{ idMessage: string }, { message: string
         }
     }
 )
-const getSettings = createAppAsyncThunk<{ wid: string }, void>("app/getSettings", async (arg, ThunkApi) => {
+const getSettings = createAppAsyncThunk<{ wid: string }, void>("app/getSettings",
+    async (arg, ThunkApi) => {
     const { rejectWithValue, getState } = ThunkApi
     const { apiTokenInstance, idInstance } = getState().app
     try {
@@ -29,31 +30,29 @@ const getSettings = createAppAsyncThunk<{ wid: string }, void>("app/getSettings"
         return rejectWithValue(handleServerNetworkError(error))
     }
 })
-const deleteNotification = createAppAsyncThunk<void, DeleteNotificationDataType>(
+const deleteNotification = createAppAsyncThunk<{result:boolean}, DeleteNotificationDataType>(
     "app/deleteNotification",
     async (arg, ThunkApi) => {
         const { rejectWithValue } = ThunkApi
         try {
-            await appApi.deleteNotification(arg)
+            const res = await appApi.deleteNotification(arg)
+            return res.data
         } catch (error) {
             return rejectWithValue(handleServerNetworkError(error))
         }
     }
 )
 
-const receiveNotification = createAppAsyncThunk<void, void>("app/receiveNotification", async (arg, ThunkApi) => {
+const receiveNotification = createAppAsyncThunk<any,void>("app/receiveNotification",
+    async (arg, ThunkApi) => {
     const { rejectWithValue, getState, dispatch } = ThunkApi
     const { apiTokenInstance, idInstance, chatId } = getState().app
 
     try {
         const res = await appApi.receiveNotification({ apiTokenInstance, idInstance })
-        if (res.data !== null) {
-            dispatch(appThunks.deleteNotification({ receiptId: res.data.receiptId, apiTokenInstance, idInstance }))
-        }
         if (res.data?.body?.senderData?.sender === chatId) {
-            if (res.data?.body.messageData.textMessageData) {
-                dispatch(
-                    appActions.addMessage({
+            if (res.data.body.messageData.textMessageData) {
+                dispatch(appActions.addMessage({
                         message: res.data?.body.messageData.textMessageData.textMessage,
                         id: res.data?.body.senderData.chatId,
                         idMessage: res.data?.body.idMessage,
@@ -61,7 +60,7 @@ const receiveNotification = createAppAsyncThunk<void, void>("app/receiveNotifica
                 )
             }
         }
-        return
+        return res.data
     } catch (error) {
         return rejectWithValue(handleServerNetworkError(error))
     }

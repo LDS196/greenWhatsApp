@@ -18,7 +18,7 @@ export const appApi = {
         )
     },
     getSettings(data: { apiTokenInstance: string; idInstance: string }) {
-        return instance.get<{ wid: string }>(`waInstance${data.idInstance}/getSettings/${data.apiTokenInstance}`)
+        return instance.get<{ wid: string }>(`waInstance${+data.idInstance}/getSettings/${data.apiTokenInstance}`)
     },
 }
 

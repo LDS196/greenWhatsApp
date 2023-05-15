@@ -4,7 +4,6 @@ import axios, { AxiosError } from "axios"
  * Обрабатывает ошибки сети, возникающие при отправке запросов на сервер
  */
 export const handleServerNetworkError = (error: unknown, isShowError: boolean = true) => {
-    console.log(error)
     const err = error as Error | AxiosError<{ error: string }>
     if (axios.isAxiosError(err)) {
         return {

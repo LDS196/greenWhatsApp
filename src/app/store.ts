@@ -8,6 +8,7 @@ const appConfig = {
 }
 const rootReducer = combineReducers({
     app: persistReducer(appConfig, appReducer),
+    // app: appReducer,
 })
 
 export const store = configureStore({
